@@ -45,7 +45,7 @@ svg::attribute(std::string name, double value)
 
 //----------------------------------------------------------------------------------------
 void
-svg::attributes_end(bool close)
+svg::element_end(bool close)
 {
     std::cout << (close == true ? "/" : "") << ">" << std::endl;
 }
@@ -71,7 +71,7 @@ svg::svg
                          std::to_string(vb_y) + " " + \
                          std::to_string(vb_width) + " " + \
                          std::to_string(vb_height));
-    attributes_end();
+    element_end();
 }
 
 svg::~svg()
@@ -91,7 +91,7 @@ svg::group_open
     {
         attribute("id", *id);
     }
-    attributes_end();
+    element_end();
 }
 
 void
@@ -124,7 +124,32 @@ svg::rect
         attribute("stroke", *stroke);
     if(fill)
         attribute("fill", *fill);
-    attributes_end(true);
+    element_end(true);
+}
+
+//----------------------------------------------------------------------------------------
+void
+svg::circle
+(
+    const int cx,
+    const int cy,
+    const int r,
+    const int stroke_width,
+    const std::optional<std::string>& stroke,
+    const std::optional<std::string>& fill
+)
+{
+    element_open("circle");
+    attribute("cx", cx);
+    attribute("cy", cy);
+    attribute("r", r);
+    if(stroke_width != 1)
+        attribute("stroke_width", stroke_width);
+    if(stroke)
+        attribute("stroke", *stroke);
+    if(fill)
+        attribute("fill", *fill);
+    element_end(true);
 }
 
 //----------------------------------------------------------------------------------------
@@ -140,6 +165,7 @@ main
     output.rect(1, 1, 399, 399, 1, "red");
     output.rect(3, 3, 395, 395, 1, std::nullopt, "yellow");
     output.rect(5, 5, 391, 391);
+    output.circle(150, 150, 100, 2, "#22FF00");
     output.group_close();
     return 0;
 }

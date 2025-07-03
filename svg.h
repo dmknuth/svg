@@ -28,6 +28,16 @@ class svg
             const std::optional<std::string>& fill = "transparent"
         );
     
+        void    circle
+        (
+            const int cx,
+            const int cy,
+            const int r,
+            const int stroke_width = 1,
+            const std::optional<std::string>& stroke = "black",
+            const std::optional<std::string>& fill = "transparent"
+        );  
+     
         void    group_open
         (
             const std::optional<std::string>& id = std::nullopt
@@ -41,5 +51,5 @@ class svg
         void    attribute(std::string name, int value);
         void    attribute(std::string name, double value);
         void    attribute(std::string name, std::string value);
-        void    attributes_end(bool close = false);
+        void    element_end(bool close = false);
 };
