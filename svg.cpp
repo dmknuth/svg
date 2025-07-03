@@ -17,6 +17,8 @@ svg::close_element(std::string element)
 }
 
 //----------------------------------------------------------------------------------------
+// Multiple instances of attribute() to accept various data types
+
 // Accept a string value for the attribute
 void
 svg::attribute(std::string name, std::string value)
@@ -48,19 +50,18 @@ svg::end_attributes(bool close)
 //----------------------------------------------------------------------------------------
 svg::svg
 (
-    int width,
-    int heigth,
-    int vb_x,
-    int vb_y,
-    int vb_width,
-    int vb_height
+    const int width,
+    const int heigth,
+    const int vb_x,
+    const int vb_y,
+    const int vb_width,
+    const int vb_height
 )
 {
     open_element("svg");
-    attribute("version", "1.1");
+    attribute("version", "2");
     attribute("xmlns", "http://www.w3.org/2000/svg");
     attribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    attribute("enable-background", "new 0 0 511 511");
     attribute("width", width);
     attribute("height", heigth);
     attribute("viewBox", std::to_string(vb_x) + " " + \
@@ -80,13 +81,13 @@ svg::~svg()
 void
 svg::rect
 (
-    int x,
-    int y,
-    int width,
-    int height,
-    int stroke_width,
-    std::string stroke,
-    std::string fill
+    const int x,
+    const int y,
+    const int width,
+    const int height,
+    const int stroke_width,
+    const std::optional<std::string> stroke,
+    const std::optional<std::string> fill
 )
 {
     open_element("rect");
@@ -96,19 +97,19 @@ svg::rect
     attribute("height", height);
     if(stroke_width != 1)
         attribute("stroke_width", stroke_width);
-    if(!stroke.empty())
-        attribute("stroke", stroke);
-    if(!fill.empty())
-        attribute("fill", fill);
+    if(stroke)
+        attribute("stroke", stroke.value());
+    if(fill)
+        attribute("fill", fill.value());
     end_attributes(true);
 }
 
 //----------------------------------------------------------------------------------------
 int main(int argv, char* argc[])
 {
-    svg output(200, 200, 0, 0, 400, 400);
-    output.rect(1, 1, 99, 99, 1, "red");
-    output.rect(3, 3, 95, 95, 1, "blue");
-    output.rect(5, 5, 91, 91);
+    svg output(400, 400, 0, 0, 400, 400);
+    output.rect(1, 1, 399, 399, 1, "red");
+    output.rect(3, 3, 395, 395, 1, std::nullopt, "yellow");
+    output.rect(5, 5, 391, 391);
     return 0;
 }
