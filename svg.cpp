@@ -1,17 +1,20 @@
-// clang++ -std=c++17 svg.cpp -o svg
+/*
+To build:
+clang++ -std=c++17 svg.cpp -o svg
+*/
 
 #include "svg.h"
 
 //----------------------------------------------------------------------------------------
 void
-svg::open_element(std::string element)
+svg::element_open(std::string element)
 {
     std::cout << "<" << element << " ";
 }
 
 //----------------------------------------------------------------------------------------
 void
-svg::close_element(std::string element)
+svg::element_close(std::string element)
 {
     std::cout << "</" << element << ">" << std::endl;
 }
@@ -42,7 +45,7 @@ svg::attribute(std::string name, double value)
 
 //----------------------------------------------------------------------------------------
 void
-svg::end_attributes(bool close)
+svg::attributes_end(bool close)
 {
     std::cout << (close == true ? "/" : "") << ">" << std::endl;
 }
@@ -58,7 +61,7 @@ svg::svg
     const int vb_height
 )
 {
-    open_element("svg");
+    element_open("svg");
     attribute("version", "2");
     attribute("xmlns", "http://www.w3.org/2000/svg");
     attribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -68,13 +71,33 @@ svg::svg
                          std::to_string(vb_y) + " " + \
                          std::to_string(vb_width) + " " + \
                          std::to_string(vb_height));
-    end_attributes();
+    attributes_end();
+}
+
+svg::~svg()
+{
+    element_close("svg");
 }
 
 //----------------------------------------------------------------------------------------
-svg::~svg()
+void
+svg::group_open
+(
+    const std::optional<std::string>& id
+)
 {
-    close_element("svg");
+    element_open("g");
+    if(id)
+    {
+        attribute("id", *id);
+    }
+    attributes_end();
+}
+
+void
+svg::group_close()
+{
+    element_close("g");
 }
 
 //----------------------------------------------------------------------------------------
@@ -86,11 +109,11 @@ svg::rect
     const int width,
     const int height,
     const int stroke_width,
-    const std::optional<std::string> stroke,
-    const std::optional<std::string> fill
+    const std::optional<std::string>& stroke,
+    const std::optional<std::string>& fill
 )
 {
-    open_element("rect");
+    element_open("rect");
     attribute("x", x);
     attribute("y", y);
     attribute("width", width);
@@ -98,18 +121,25 @@ svg::rect
     if(stroke_width != 1)
         attribute("stroke_width", stroke_width);
     if(stroke)
-        attribute("stroke", stroke.value());
+        attribute("stroke", *stroke);
     if(fill)
-        attribute("fill", fill.value());
-    end_attributes(true);
+        attribute("fill", *fill);
+    attributes_end(true);
 }
 
 //----------------------------------------------------------------------------------------
-int main(int argv, char* argc[])
+int
+main
+(
+    int     argv,
+    char*   argc[]
+)
 {
     svg output(400, 400, 0, 0, 400, 400);
+    output.group_open("123");
     output.rect(1, 1, 399, 399, 1, "red");
     output.rect(3, 3, 395, 395, 1, std::nullopt, "yellow");
     output.rect(5, 5, 391, 391);
+    output.group_close();
     return 0;
 }

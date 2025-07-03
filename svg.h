@@ -17,21 +17,29 @@ class svg
 
         ~svg();
     
-    void    rect(
-        const int x,
-        const int y,
-        const int width,
-        const int height,   
-        const int stroke_width = 1,
-        const std::optional<std::string> stroke = "black",
-        const std::optional<std::string> fill = "transparent"
-    );
+        void    rect
+        (
+            const int x,
+            const int y,
+            const int width,
+            const int height,   
+            const int stroke_width = 1,
+            const std::optional<std::string>& stroke = "black",
+            const std::optional<std::string>& fill = "transparent"
+        );
+    
+        void    group_open
+        (
+            const std::optional<std::string>& id = std::nullopt
+        );
+    
+        void    group_close();
 
     private:
-        void    open_element(std::string element);
-        void    close_element(std::string element);
+        void    element_open(std::string element);
+        void    element_close(std::string element);
         void    attribute(std::string name, int value);
         void    attribute(std::string name, double value);
         void    attribute(std::string name, std::string value);
-        void    end_attributes(bool close = false);
+        void    attributes_end(bool close = false);
 };
