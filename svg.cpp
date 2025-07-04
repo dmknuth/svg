@@ -1,9 +1,11 @@
 /*
 To build:
-clang++ -std=c++17 svg.cpp -o svg
+clang++ -std=c++17 svg.cpp lumber.cpp -o svg
 */
 
 #include "svg.h"
+#include <sstream>
+#include <string>
 
 //----------------------------------------------------------------------------------------
 void
@@ -83,13 +85,22 @@ svg::~svg()
 void
 svg::group_open
 (
-    const std::optional<std::string>& id
+    const std::optional<std::string>& id,
+    const std::optional<std::string>& transform
 )
 {
     element_open("g");
     if(id)
     {
         attribute("id", *id);
+    }
+    
+    if(transform)
+    {
+        std::string arg("translate(");
+        arg.append(transform.value());
+        arg.append(")");
+        attribute("transform", arg);
     }
     element_end();
 }
@@ -150,22 +161,4 @@ svg::circle
     if(fill)
         attribute("fill", *fill);
     element_end(true);
-}
-
-//----------------------------------------------------------------------------------------
-int
-main
-(
-    int     argv,
-    char*   argc[]
-)
-{
-    svg output(400, 400, 0, 0, 400, 400);
-    output.group_open("123");
-    output.rect(1, 1, 399, 399, 1, "red");
-    output.rect(3, 3, 395, 395, 1, std::nullopt, "yellow");
-    output.rect(5, 5, 391, 391);
-    output.circle(150, 150, 100, 2, "#22FF00");
-    output.group_close();
-    return 0;
 }

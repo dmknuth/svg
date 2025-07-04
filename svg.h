@@ -7,12 +7,12 @@ class svg
     public:
         svg
         (
-            const int width       = 100,
-            const int heigth      = 100,
+            const int width       = 4608,
+            const int heigth      = 4608,
             const int vb_x        = 0,
             const int vb_y        = 0,
-            const int vb_width    = 100,
-            const int vb_height   = 100
+            const int vb_width    = 4608,
+            const int vb_height   = 4608
         );
 
         ~svg();
@@ -40,7 +40,8 @@ class svg
      
         void    group_open
         (
-            const std::optional<std::string>& id = std::nullopt
+            const std::optional<std::string>& id = std::nullopt,
+            const std::optional<std::string>& transform = std::nullopt
         );
     
         void    group_close();
