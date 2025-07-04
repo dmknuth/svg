@@ -47,9 +47,9 @@ class svg
 
     private:
         void    element_open(std::string element);
+        void    element_end(bool close = false);
         void    element_close(std::string element);
         void    attribute(std::string name, int value);
         void    attribute(std::string name, double value);
         void    attribute(std::string name, std::string value);
-        void    element_end(bool close = false);
 };
